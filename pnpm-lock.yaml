@@ -18,8 +18,8 @@ importers:
         specifier: ^2.0.18
         version: 2.0.18(react@19.1.0)(zod@4.0.17)
       '@deno/sandbox':
-        specifier: ^0.0.3
-        version: 0.0.3
+        specifier: ^0.0.4
+        version: 0.0.4
       ai:
         specifier: ^5.0.18
         version: 5.0.18(zod@4.0.17)
@@ -108,8 +108,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@deno/sandbox@0.0.3':
-    resolution: {integrity: sha512-E9ff5fPVxn8KwMys8v3zbW0vEzRaOkt+BRbJMuZ2/LciuS/lvI/7bwe0iEnSTRnAl8LyzUVbtV9Ab77dgXLZHw==}
+  '@deno/sandbox@0.0.4':
+    resolution: {integrity: sha512-bABBcUbpSHsvCS6rFGuUc0vQ+T+tWfkYBItLfh+WVc+NtaFEG0RP4rfFFsyoQsyQwnJ2Ryot1JT5CJiR7hmM3Q==}
 
   '@emnapi/core@1.4.5':
     resolution: {integrity: sha512-XsLw1dEOpkSX/WucdqUhPWP7hDxSvZiY+fsUC14h+FtQ2Ifni4znbBt8punRX+Uj2JG/uDb8nEHVKvrVlvdZ5Q==}
@@ -1961,7 +1961,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@deno/sandbox@0.0.3':
+  '@deno/sandbox@0.0.4':
     dependencies:
       devalue: 5.1.1
       ws: 8.18.3
