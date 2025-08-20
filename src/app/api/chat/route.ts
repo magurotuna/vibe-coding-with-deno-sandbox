@@ -7,12 +7,27 @@ import {
   UIMessage,
 } from "ai";
 import { z } from "zod";
+import { getSandbox } from "@/app/sandbox-map";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
+const sandboxTools = {};
+
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
+
+  const sandboxId = req.headers.get("x-sandbox-id");
+  if (!sandboxId) {
+    console.error("Sandbox ID is required");
+    return new Response("Sandbox ID is required", { status: 400 });
+  }
+
+  const sandbox = getSandbox(sandboxId);
+  if (!sandbox) {
+    console.error(`Sandbox not found: ${sandboxId}`);
+    return new Response("Sandbox not found", { status: 404 });
+  }
 
   const result = streamText({
     model: anthropic("claude-sonnet-4-20250514"),
