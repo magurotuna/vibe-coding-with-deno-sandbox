@@ -2,12 +2,15 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Check, Copy, RefreshCw, User } from "lucide-react";
 
 export default function Chat({ sandboxId }: { sandboxId: string }) {
   const [input, setInput] = useState("");
   const [copied, setCopied] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       headers: {
@@ -16,6 +19,11 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
     }),
   });
   const isDisabled = status === "submitted" || status === "streaming";
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, status]);
 
   const publicUrl = useMemo(() => {
     for (const msg of messages.toReversed()) {
@@ -39,7 +47,10 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
           publicUrl ? "w-1/2" : "w-full max-w-2xl mx-auto"
         } h-full transition-all duration-300`}
       >
-        <div className="flex-1 overflow-y-auto pb-20 bg-zinc-50 dark:bg-zinc-950">
+        <div
+          ref={chatContainerRef}
+          className="flex-1 overflow-y-auto pb-20 bg-zinc-50 dark:bg-zinc-950"
+        >
           <div className="sticky top-0 z-10 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 p-4">
             <div className="text-xs text-zinc-500 dark:text-zinc-400">
               Sandbox ID: {sandboxId}
@@ -130,6 +141,9 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                 </div>
               </div>
             )}
+
+            {/* Scroll anchor */}
+            <div ref={messagesEndRef} />
           </div>
         </div>
 
