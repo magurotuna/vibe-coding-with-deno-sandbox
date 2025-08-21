@@ -3,7 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bot, Check, Copy, RefreshCw, User } from "lucide-react";
+import { Bot, Check, Copy, Loader2, RefreshCw, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -20,7 +20,7 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
       },
     }),
   });
-  const isDisabled = status === "submitted" || status === "streaming";
+  const isProcessing = status === "submitted" || status === "streaming";
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
             </div>
 
             {/* Message history */}
-            {messages.map((message) => (
+            {messages.map((message, messageIndex) => (
               <div key={message.id} className="flex gap-3">
                 <div className="flex-shrink-0">
                   {message.role === "user"
@@ -166,13 +166,16 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                           return (
                             <pre
                               key={`${message.id}-${i}`}
-                              className="text-xs text-zinc-500 dark:text-zinc-400 whitespace-pre-wrap mt-2 p-2 bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-200 dark:border-zinc-800"
+                              className="text-xs text-zinc-500 dark:text-zinc-400 whitespace-pre-wrap my-2 p-2 bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-200 dark:border-zinc-800"
                             >
                               {JSON.stringify(part, null, 2)}
                             </pre>
                           );
                       }
                     })}
+                    {isProcessing &&
+                      message.role === "assistant" &&
+                      messageIndex === messages.length - 1 && <Processing />}
                   </div>
                 </div>
               </div>
@@ -197,7 +200,7 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!isDisabled) {
+            if (!isProcessing) {
               sendMessage({ text: input });
               setInput("");
             }
@@ -207,11 +210,11 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
           <input
             className="w-full p-3 border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={input}
-            placeholder={isDisabled
+            placeholder={isProcessing
               ? "Waiting for the AI to respond..."
               : "Say something..."}
             onChange={(e) => setInput(e.currentTarget.value)}
-            disabled={isDisabled}
+            disabled={isProcessing}
           />
         </form>
       </div>
@@ -273,6 +276,19 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function Processing() {
+  return (
+    <div className="bg-white dark:bg-zinc-900 rounded-lg p-4">
+      <div className="flex items-center gap-2">
+        <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+        <span className="text-sm text-zinc-500 dark:text-zinc-400">
+          Processing...
+        </span>
+      </div>
     </div>
   );
 }
