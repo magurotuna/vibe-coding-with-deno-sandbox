@@ -123,14 +123,11 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                                     {children}
                                       </pre>
                                     ),
-                                    code: ({ inline, children }) =>
-                                      inline
-                                        ? (
-                                          <code className="bg-zinc-200 dark:bg-zinc-800 px-1 py-0.5 rounded text-xs">
-                                            {children}
-                                          </code>
-                                        )
-                                        : <code>{children}</code>,
+                                    code: ({ children }) => (
+                                      <code className="bg-zinc-200 dark:bg-zinc-800 px-1 py-0.5 rounded text-xs">
+                                        {children}
+                                      </code>
+                                    ),
                                     ul: ({ children }) => (
                                       <ul className="list-disc list-inside space-y-1 my-2">
                                         {children}
