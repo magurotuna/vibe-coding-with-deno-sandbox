@@ -3,9 +3,11 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useMemo, useState } from "react";
+import { Check, Copy, RefreshCw } from "lucide-react";
 
 export default function Chat({ sandboxId }: { sandboxId: string }) {
   const [input, setInput] = useState("");
+  const [copied, setCopied] = useState(false);
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       headers: {
@@ -124,15 +126,25 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                     ) as HTMLIFrameElement;
                     if (iframe) iframe.src = iframe.src;
                   }}
-                  className="px-3 py-1 text-sm bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded transition-colors"
+                  className="p-2 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded transition-all active:scale-95 active:bg-zinc-400 dark:active:bg-zinc-600 cursor-pointer"
+                  title="Refresh"
                 >
-                  Refresh
+                  <RefreshCw className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => navigator.clipboard.writeText(publicUrl)}
-                  className="px-3 py-1 text-sm bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText(publicUrl);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="p-2 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 rounded transition-all active:scale-95 active:bg-zinc-400 dark:active:bg-zinc-600 cursor-pointer"
+                  title={copied ? "Copied!" : "Copy URL"}
                 >
-                  Copy URL
+                  {copied
+                    ? (
+                      <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    )
+                    : <Copy className="w-4 h-4" />}
                 </button>
               </div>
             </div>
