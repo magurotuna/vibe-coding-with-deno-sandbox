@@ -4,6 +4,8 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Check, Copy, RefreshCw, User } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Chat({ sandboxId }: { sandboxId: string }) {
   const [input, setInput] = useState("");
@@ -107,14 +109,62 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                     {message.parts.map((part, i) => {
                       switch (part.type) {
                         case "text":
-                          return (
-                            <div
-                              key={`${message.id}-${i}`}
-                              className="text-sm whitespace-pre-wrap"
-                            >
-                              {part.text}
-                            </div>
-                          );
+                          return message.role === "assistant"
+                            ? (
+                              <div
+                                key={`${message.id}-${i}`}
+                                className="text-sm prose prose-sm dark:prose-invert max-w-none"
+                              >
+                                <ReactMarkdown
+                                  remarkPlugins={[remarkGfm]}
+                                  components={{
+                                    pre: ({ children }) => (
+                                      <pre className="bg-zinc-100 dark:bg-zinc-950 p-3 rounded-lg overflow-x-auto my-2">
+                                    {children}
+                                      </pre>
+                                    ),
+                                    code: ({ inline, children }) =>
+                                      inline
+                                        ? (
+                                          <code className="bg-zinc-200 dark:bg-zinc-800 px-1 py-0.5 rounded text-xs">
+                                            {children}
+                                          </code>
+                                        )
+                                        : <code>{children}</code>,
+                                    ul: ({ children }) => (
+                                      <ul className="list-disc list-inside space-y-1 my-2">
+                                        {children}
+                                      </ul>
+                                    ),
+                                    ol: ({ children }) => (
+                                      <ol className="list-decimal list-inside space-y-1 my-2">
+                                        {children}
+                                      </ol>
+                                    ),
+                                    a: ({ children, href }) => (
+                                      <a
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-500 hover:text-blue-600 underline"
+                                      >
+                                        {children}
+                                      </a>
+                                    ),
+                                  }}
+                                >
+                                  {part.text}
+                                </ReactMarkdown>
+                              </div>
+                            )
+                            : (
+                              <div
+                                key={`${message.id}-${i}`}
+                                className="text-sm whitespace-pre-wrap"
+                              >
+                                {part.text}
+                              </div>
+                            );
                         default:
                           return (
                             <pre
