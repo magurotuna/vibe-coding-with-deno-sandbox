@@ -3,7 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useMemo, useState } from "react";
-import { Check, Copy, RefreshCw } from "lucide-react";
+import { Bot, Check, Copy, RefreshCw, User } from "lucide-react";
 
 export default function Chat({ sandboxId }: { sandboxId: string }) {
   const [input, setInput] = useState("");
@@ -39,45 +39,98 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
           publicUrl ? "w-1/2" : "w-full max-w-2xl mx-auto"
         } h-full transition-all duration-300`}
       >
-        <div className="flex-1 overflow-y-auto p-6 pb-20">
-          <div className="text-sm text-gray-500 mb-4">
-            Sandbox ID: {sandboxId}
-          </div>
-          <div className="whitespace-pre-wrap mb-4">
-            AI:{" "}
-            <div>
-              Hello! What app do you want to build today?
+        <div className="flex-1 overflow-y-auto pb-20 bg-zinc-50 dark:bg-zinc-950">
+          <div className="sticky top-0 z-10 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 p-4">
+            <div className="text-xs text-zinc-500 dark:text-zinc-400">
+              Sandbox ID: {sandboxId}
             </div>
           </div>
-          {messages.map((message) => (
-            <div key={message.id} className="whitespace-pre-wrap mb-4">
-              {message.role === "user" ? "User: " : "AI: "}
-              {message.parts.map((part, i) => {
-                switch (part.type) {
-                  case "text":
-                    return (
-                      <div key={`${message.id}-${i}`}>
-                        {part.text}
+
+          <div className="p-6 space-y-6">
+            {/* Welcome message */}
+            <div className="flex gap-3">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                  AI Assistant
+                </div>
+                <div className="bg-white dark:bg-zinc-900 rounded-lg p-4 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                  <p className="text-sm">
+                    Hello! What app do you want to build today?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Message history */}
+            {messages.map((message) => (
+              <div key={message.id} className="flex gap-3">
+                <div className="flex-shrink-0">
+                  {message.role === "user"
+                    ? (
+                      <div className="w-8 h-8 rounded-full bg-zinc-700 dark:bg-zinc-600 flex items-center justify-center">
+                        <User className="w-5 h-5 text-white" />
                       </div>
-                    );
-                  default:
-                    return (
-                      <pre
-                        key={`${message.id}-${i}`}
-                        className="text-xs text-gray-500 whitespace-pre-wrap"
-                      >
-                        {JSON.stringify(part, null, 2)}
-                      </pre>
-                    );
-                }
-              })}
-            </div>
-          ))}
-          {error && (
-            <div className="text-red-500 text-sm mb-4">
-              {error.message}
-            </div>
-          )}
+                    )
+                    : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-white" />
+                      </div>
+                    )}
+                </div>
+                <div className="flex-1">
+                  <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+                    {message.role === "user" ? "You" : "AI Assistant"}
+                  </div>
+                  <div
+                    className={`rounded-lg p-4 shadow-sm border ${
+                      message.role === "user"
+                        ? "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
+                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
+                    }`}
+                  >
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <div
+                              key={`${message.id}-${i}`}
+                              className="text-sm whitespace-pre-wrap"
+                            >
+                              {part.text}
+                            </div>
+                          );
+                        default:
+                          return (
+                            <pre
+                              key={`${message.id}-${i}`}
+                              className="text-xs text-zinc-500 dark:text-zinc-400 whitespace-pre-wrap mt-2 p-2 bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-200 dark:border-zinc-800"
+                            >
+                              {JSON.stringify(part, null, 2)}
+                            </pre>
+                          );
+                      }
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {error && (
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-8" />
+                <div className="flex-1 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {error.message}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <form
