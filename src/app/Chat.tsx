@@ -163,7 +163,7 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                               </div>
                             );
                         default:
-                          return (
+                          return part.type !== "step-start" && (
                             <pre
                               key={`${message.id}-${i}`}
                               className="text-xs text-zinc-500 dark:text-zinc-400 whitespace-pre-wrap my-2 p-2 bg-zinc-50 dark:bg-zinc-950 rounded border border-zinc-200 dark:border-zinc-800"
