@@ -6,13 +6,15 @@ import { useState } from "react";
 
 export default function Chat({ sandboxId }: { sandboxId: string }) {
   const [input, setInput] = useState("");
-  const { messages, sendMessage } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       headers: {
         "x-sandbox-id": sandboxId,
       },
     }),
   });
+  const isDisabled = status === "submitted" || status === "streaming";
+
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       <div className="text-sm text-gray-500 mb-4">
@@ -35,9 +37,12 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
                     {part.text}
                   </div>
                 );
-              case "tool-weather":
+              default:
                 return (
-                  <pre key={`${message.id}-${i}`}>
+                  <pre
+                    key={`${message.id}-${i}`}
+                    className="text-xs text-gray-500 whitespace-pre-wrap"
+                  >
                     {JSON.stringify(part, null, 2)}
                   </pre>
                 );
@@ -45,19 +50,29 @@ export default function Chat({ sandboxId }: { sandboxId: string }) {
           })}
         </div>
       ))}
+      {error && (
+        <div className="text-red-500 text-sm">
+          {error.message}
+        </div>
+      )}
 
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          sendMessage({ text: input });
-          setInput("");
+          if (!isDisabled) {
+            sendMessage({ text: input });
+            setInput("");
+          }
         }}
       >
         <input
           className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
           value={input}
-          placeholder="Say something..."
+          placeholder={isDisabled
+            ? "Waiting for the AI to respond..."
+            : "Say something..."}
           onChange={(e) => setInput(e.currentTarget.value)}
+          disabled={isDisabled}
         />
       </form>
     </div>
