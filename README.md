@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# vibe-coding-with-deno-sandbox
 
-## Getting Started
+A demo application where you can vibe-code your app and deploy it instantly to
+an ephemeral sandbox powered by
+[Deno Deploy EA](https://docs.deno.com/deploy/early-access/), showcasing how the
+sandbox SDK [`@deno/sandbox`] can be used and integrated with AI toolkits like
+[`AI SDK`]
 
-First, run the development server:
+## Overview
+
+This Next.js app demonstrates how to integrate `@deno/sandbox` to execute and
+host AI-generated untrusted code safely. An AI assistant generates code that
+gets run in a sandbox with full filesystem HTTP server capabilities, and
+publicly accessible URL.
+
+## Demo
+
+![Demo](./demo.gif)
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+
+# Set env vars in `.env.local`
+ANTHROPIC_API_KEY=your_key
+GOOGLE_GENERATIVE_AI_API_KEY=your_key
+DENO_DEPLOY_TOKEN=your_token
+
+# Run dev server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js 15
+- [`@deno/sandbox`] for isolated code execution
+- Claude or Gemini for code generation
+- [`AI SDK`] for easy integration with AI models
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[`@deno/sandbox`]: https://jsr.io/@deno/sandbox
+[`AI SDK`]: https://ai-sdk.dev/
