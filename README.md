@@ -8,7 +8,7 @@ sandbox SDK [`@deno/sandbox`] can be used and integrated with AI toolkits like
 
 ## Overview
 
-This Next.js app demonstrates how to integrate `@deno/sandbox` to execute and
+This Next.js app demonstrates how to integrate [`@deno/sandbox`] to execute and
 host AI-generated untrusted code safely. An AI assistant generates code that
 gets run in a sandbox with full filesystem HTTP server capabilities, and
 publicly accessible URL.
