@@ -20,6 +20,7 @@ publicly accessible URL.
 ## Setup
 
 ```bash
+# Install dependencies
 pnpm install
 
 # Set env vars in `.env.local`
