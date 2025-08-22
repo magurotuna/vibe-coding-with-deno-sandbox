@@ -15,7 +15,7 @@ publicly accessible URL.
 
 ## Demo
 
-![Demo](./demo.gif)
+https://github.com/user-attachments/assets/8a960067-3f1e-4e3b-ab7a-861e345fc57d
 
 ## Setup
 
